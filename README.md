@@ -39,21 +39,15 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
      - **CIDR Block**: `10.0.2.0/24`
      - **Availability Zone**: `us-west-2a`
    
-     - **Name**: `PrivateSubnetApp2`
+     - **Name**: `PrivateSubnet2`
      - **CIDR Block**: `10.0.3.0/24`
      - **Availability Zone**: `us-west-2b`
    
    - **Private Subnet** for the database:
      - **Name**: `PrivateSubnetDB`
      - **CIDR Block**: `10.0.4.0/24`
-     - **Availability Zone**: `us-west-2b`
+     - **Availability Zone**: `us-west-2a`
    
-   ![chrome_n4gt5W9HHt](https://github.com/user-attachments/assets/cc25ff73-6d75-4773-b294-0463318fbaa6)
-
-
-
-
-
 3. **Create an Internet Gateway (IGW):**
    - **Name**: `MultiTierIGW`
    - Attach it to the `MultiTierVPC`.
@@ -92,7 +86,8 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 
    ![chrome_ZdHj95HLlg](https://github.com/user-attachments/assets/11bb9840-e42c-4171-a130-7e1ed8d9de19)
 
-   ![chrome_uY96DEJA7e](https://github.com/user-attachments/assets/e54c47ae-be0e-40f9-950a-c20a84de4389)
+   ![chrome_K6aZWJFx50](https://github.com/user-attachments/assets/141fd2fe-12d8-4c57-9e1a-bb04bc046cc5)
+
 
 
 
