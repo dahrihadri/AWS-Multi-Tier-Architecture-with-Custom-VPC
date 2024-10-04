@@ -58,13 +58,17 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
    - **Name**: `MultiTierIGW`
    - Attach it to the `MultiTierVPC`.
 
-   ![chrome_JPkHVcGnSJ](https://github.com/user-attachments/assets/d0a67912-1060-40e0-ba45-48fdee51251a)
+   ![chrome_tMXZYSTppm](https://github.com/user-attachments/assets/597800d8-5c96-4e50-8ffe-03d078a8a948)
+
 
 
 4. **Create a NAT Gateway:**
    - Allocate an **Elastic IP Address**.
    - Create a NAT Gateway in the **PublicSubnet**.
    - **Name**: `MultiTierNATGateway`
+
+   ![chrome_nWROEGvgUx](https://github.com/user-attachments/assets/aaf8899f-df1c-4d4d-be94-92e73c530f6b)
+
 
 5. **Configure Route Tables:**
    - **Public Route Table**:
@@ -74,12 +78,21 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
        - **Destination**: `0.0.0.0/0`
        - **Target**: `MultiTierIGW`
 
+   ![chrome_qOfXjeubcD](https://github.com/user-attachments/assets/c403abcd-f7e7-4606-b152-511260227098)
+
+
    - **Private Route Table**:
      - **Name**: `PrivateRouteTable`
      - Associate with private subnets (`PrivateSubnetApp1`, `PrivateSubnetApp2`, `PrivateSubnetDB`).
      - Add route:
        - **Destination**: `0.0.0.0/0`
        - **Target**: `MultiTierNATGateway`
+
+   ![chrome_mblkN1Ow1h](https://github.com/user-attachments/assets/f73326ea-8ab9-4a90-8d3c-17d373f009b3)
+
+   ![chrome_ZdHj95HLlg](https://github.com/user-attachments/assets/11bb9840-e42c-4171-a130-7e1ed8d9de19)
+
+
 
 ---
 
@@ -111,6 +124,9 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
      - **Inbound**:
        - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-AppServer`
      - **Outbound**: Allow all traffic.
+
+   ![chrome_TrPnucbZr5](https://github.com/user-attachments/assets/83fc6f28-5cb0-4da4-bcd1-77e9bbc63308)
+
 
 ---
 
