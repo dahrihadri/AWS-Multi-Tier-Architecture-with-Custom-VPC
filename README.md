@@ -182,6 +182,9 @@ sudo systemctl enable mariadb
    - **Name**: `DB-Subnet-Group`
    - **Subnets**: `PrivateSubnetDB`
 
+![chrome_woKteGk8qv](https://github.com/user-attachments/assets/d300933f-941a-47e2-9f23-fc600d86c691)
+
+
 2. **Launch RDS Instance**:
    - **Engine**: MariaDB  
    - **Instance Type**: `db.t2.micro`  
