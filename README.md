@@ -4,6 +4,7 @@
 ## **Overview**
 This project demonstrates how to build a custom VPC with multiple subnets, security groups, and EC2 instances to simulate a multi-tier architecture. It uses a Bastion host, web server, application server, and database instance with proper security group configurations.
 
+![Project architecture](assets/screenshots/Tier3Topology.png)
 ---
 
 ## **Table of Contents**
