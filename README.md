@@ -92,6 +92,9 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 
    ![chrome_ZdHj95HLlg](https://github.com/user-attachments/assets/11bb9840-e42c-4171-a130-7e1ed8d9de19)
 
+   ![chrome_uY96DEJA7e](https://github.com/user-attachments/assets/e54c47ae-be0e-40f9-950a-c20a84de4389)
+
+
 
 
 ---
@@ -173,6 +176,9 @@ sudo yum install -y mariadb-server
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 ```
+
+![chrome_Wqb1YFdmDs](https://github.com/user-attachments/assets/82d374a8-45b9-4bed-a0d6-65d5935b62ce)
+
 
 ---
 
