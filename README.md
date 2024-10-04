@@ -4,10 +4,12 @@
 ## **Overview**
 This project demonstrates how to build a custom VPC with multiple subnets, security groups, and EC2 instances to simulate a multi-tier architecture. It uses a Bastion host, web server, application server, and database instance with proper security group configurations.
 
-![Project architecture](assets/screenshots/Tier3Topology.png)
+![chrome_eoAELUeYMe](https://github.com/user-attachments/assets/3076e948-9f7e-470d-9f67-e39e818e7b28)
+
 ---
 
 ## **Table of Contents**
+- [Prerequisites](#prerequisites)
 - [Step 1: VPC and Subnet Setup](#step-1-vpc-and-subnet-setup)
 - [Step 2: Create Security Groups](#step-2-create-security-groups)
 - [Step 3: Deploy EC2 Instances](#step-3-deploy-ec2-instances)
@@ -16,6 +18,9 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 - [Step 6: Clean Up Resources](#step-6-clean-up-resources)
 
 ---
+
+## Prerequisites
+- An [AWS account](https://aws.amazon.com/free/) (Free Tier eligible)
 
 ## **Step 1: VPC and Subnet Setup**
 1. **Create a Custom VPC:**
@@ -42,10 +47,19 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
      - **Name**: `PrivateSubnetDB`
      - **CIDR Block**: `10.0.4.0/24`
      - **Availability Zone**: `us-west-2b`
+   
+   ![chrome_n4gt5W9HHt](https://github.com/user-attachments/assets/cc25ff73-6d75-4773-b294-0463318fbaa6)
+
+
+
+
 
 3. **Create an Internet Gateway (IGW):**
    - **Name**: `MultiTierIGW`
    - Attach it to the `MultiTierVPC`.
+
+   ![chrome_JPkHVcGnSJ](https://github.com/user-attachments/assets/d0a67912-1060-40e0-ba45-48fdee51251a)
+
 
 4. **Create a NAT Gateway:**
    - Allocate an **Elastic IP Address**.
