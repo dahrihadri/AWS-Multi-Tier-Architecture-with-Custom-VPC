@@ -25,27 +25,27 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 ## **Step 1: VPC and Subnet Setup**
 1. **Create a Custom VPC:**
    - **Name**: `MultiTierVPC`
-   - **IPv4 CIDR Block**: `10.0.0.0/16`
+   - **IPv4 CIDR Block**: `192.168.0.0/16 `
    - **Tenancy**: Default
 
 2. **Create Subnets:**
    - **Public Subnet** for the Bastion host and web server:
      - **Name**: `PublicSubnet`
-     - **CIDR Block**: `10.0.1.0/24`
+     - **CIDR Block**: `192.168..1.0/24`
      - **Availability Zone**: `us-west-2a`
    
    - **Private Subnets** for the application server:
      - **Name**: `PrivateSubnetApp1`
-     - **CIDR Block**: `10.0.2.0/24`
+     - **CIDR Block**: `192.168..2.0/24`
      - **Availability Zone**: `us-west-2a`
    
      - **Name**: `PrivateSubnet2`
-     - **CIDR Block**: `10.0.3.0/24`
+     - **CIDR Block**: `192.168..3.0/24`
      - **Availability Zone**: `us-west-2b`
    
    - **Private Subnet** for the database:
      - **Name**: `PrivateSubnetDB`
-     - **CIDR Block**: `10.0.4.0/24`
+     - **CIDR Block**: `192.168..4.0/24`
      - **Availability Zone**: `us-west-2a`
    
 3. **Create an Internet Gateway (IGW):**
