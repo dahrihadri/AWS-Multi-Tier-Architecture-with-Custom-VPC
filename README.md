@@ -97,32 +97,42 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
    - **Name**: `SG-Bastion`
    - **Rules**:
      - **Inbound**:
-       - Type: SSH, Protocol: TCP, Port: 22, Source: `Your-Trusted-IP/32`
+       - Type: SSH, Protocol: TCP, Port: 22, Source: `Your-Trusted-IP/32`. Give it three inbound rules, one for SSH using your IP and one for HTTP using 0.0.0.0/0 as well as https using 0.0.0.0/0
      - **Outbound**: Allow all traffic.
+
+   ![chrome_JfFLU8ywxq](https://github.com/user-attachments/assets/77dc2811-939d-4953-a798-2f68baef6522)
+
 
 2. **Web Server Security Group**:
    - **Name**: `SG-WebServer`
    - **Rules**:
      - **Inbound**:
-       - Type: HTTP, Protocol: TCP, Port: 80, Source: `0.0.0.0/0`
+       - Type: HTTP, Protocol: TCP, Port: 80, Source: `0.0.0.0/0`. Give it the same inbound rules as the Bastion Host security group
      - **Outbound**: Allow all traffic.
+
+   ![chrome_U0V6PXqW4m](https://github.com/user-attachments/assets/90eb79a6-d126-42ce-979d-3fbefb7b114d)
+
 
 3. **Application Server Security Group**:
    - **Name**: `SG-AppServer`
    - **Rules**:
      - **Inbound**:
-       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-WebServer`
+       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-WebServer`. Give it an inbound rule for All ICMP -IPv4 with a source of your web server SG and another inbound rule for SSH with a source of your bastion host SG
      - **Outbound**: Allow all traffic.
+    
+   ![chrome_QjgOq7rgYW](https://github.com/user-attachments/assets/fee42064-8a93-4cec-8d02-fbf340fbf3ca)
+
 
 4. **Database Security Group**:
    - **Name**: `SG-Database`
    - **Rules**:
      - **Inbound**:
-       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-AppServer`
+       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-AppServer`. Give it two inbound rules both for MYSQL/Aurora and give one of them a source of your app server SG and the other one a source of your bastion host SG
      - **Outbound**: Allow all traffic.
+    
+   ![chrome_ojIvDlsM96](https://github.com/user-attachments/assets/0ab6372b-1b5f-4b8a-a6f3-44c3ed0f5841)
 
-   ![chrome_TrPnucbZr5](https://github.com/user-attachments/assets/83fc6f28-5cb0-4da4-bcd1-77e9bbc63308)
-
+   ![chrome_DefONrJXMG](https://github.com/user-attachments/assets/1d81740e-0a42-450a-ac8b-29c65515c393)
 
 ---
 
