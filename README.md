@@ -31,22 +31,22 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 2. **Create Subnets:**
    - **Public Subnet** for the Bastion host and web server:
      - **Name**: `PublicSubnet`
-     - **CIDR Block**: `192.168..1.0/24`
+     - **CIDR Block**: `192.168.1.0/24`
      - **Availability Zone**: `us-west-2a`
    
    - **Private Subnets** for the application server:
-     - **Name**: `PrivateSubnetApp1`
-     - **CIDR Block**: `192.168..2.0/24`
+     - **Name**: `PrivateSubnet1`
+     - **CIDR Block**: `192.168.2.0/24`
      - **Availability Zone**: `us-west-2a`
    
      - **Name**: `PrivateSubnet2`
-     - **CIDR Block**: `192.168..3.0/24`
-     - **Availability Zone**: `us-west-2b`
+     - **CIDR Block**: `192.168.3.0/24`
+     - **Availability Zone**: `us-west-2a`
    
    - **Private Subnet** for the database:
-     - **Name**: `PrivateSubnetDB`
-     - **CIDR Block**: `192.168..4.0/24`
-     - **Availability Zone**: `us-west-2a`
+     - **Name**: `PrivateSubnet3`
+     - **CIDR Block**: `192.168.4.0/24`
+     - **Availability Zone**: `us-west-2b`
    
 3. **Create an Internet Gateway (IGW):**
    - **Name**: `MultiTierIGW`
@@ -72,7 +72,9 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
        - **Destination**: `0.0.0.0/0`
        - **Target**: `MultiTierIGW`
 
-   ![chrome_qOfXjeubcD](https://github.com/user-attachments/assets/c403abcd-f7e7-4606-b152-511260227098)
+   ![chrome_uB8TCdcVHV](https://github.com/user-attachments/assets/441a14f1-cd0a-47a0-8033-234d86fca992)
+
+   ![chrome_CoXy2HVVtC](https://github.com/user-attachments/assets/b7af003e-ca00-433c-b90b-3e3b0a293dc9)
 
 
    - **Private Route Table**:
@@ -82,15 +84,11 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
        - **Destination**: `0.0.0.0/0`
        - **Target**: `MultiTierNATGateway`
 
-   ![chrome_mblkN1Ow1h](https://github.com/user-attachments/assets/f73326ea-8ab9-4a90-8d3c-17d373f009b3)
+   ![chrome_fnbeMGjJsY](https://github.com/user-attachments/assets/934b6975-9054-4d88-85fa-cfbb1edb425b)
 
-   ![chrome_ZdHj95HLlg](https://github.com/user-attachments/assets/11bb9840-e42c-4171-a130-7e1ed8d9de19)
+   ![chrome_JirlJxGh0X](https://github.com/user-attachments/assets/1d8dcb8f-4061-4fb2-9d3d-c50eda7294de)
 
-   ![chrome_K6aZWJFx50](https://github.com/user-attachments/assets/141fd2fe-12d8-4c57-9e1a-bb04bc046cc5)
-
-
-
-
+   ![chrome_ufT9Iiyh5C](https://github.com/user-attachments/assets/e617db27-917d-40ba-b74f-d07fb93fb973)
 
 ---
 
