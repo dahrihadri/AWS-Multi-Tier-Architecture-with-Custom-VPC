@@ -142,7 +142,8 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 2. **Instance Type**: `t2.micro`  
 3. **Subnet**: `PublicSubnet`  
 4. **Security Group**: `SG-Bastion`  
-5. **Key Pair**: Select or create a key pair  
+5. **Key Pair**: Select or create a key pair
+6. **Auto-assign public IP**: enable 
 
 **User Data (Optional)**:
 ```bash
@@ -154,7 +155,8 @@ sudo yum update -y
 1. **AMI**: Amazon Linux 2  
 2. **Instance Type**: `t2.micro`  
 3. **Subnet**: `PublicSubnet`  
-4. **Security Group**: `SG-WebServer`  
+4. **Security Group**: `SG-WebServer`
+5. **Auto-assign public IP**: enable   
 
 **User Data**:
 ```bash
@@ -170,7 +172,8 @@ sudo systemctl enable httpd
 1. **AMI**: Amazon Linux 2  
 2. **Instance Type**: `t2.micro`  
 3. **Subnet**: `PrivateSubnetApp1`  
-4. **Security Group**: `SG-AppServer`  
+4. **Security Group**: `SG-AppServer`
+5. **Auto-assign public IP**: disable  
 
 **User Data**:
 ```bash
@@ -194,7 +197,7 @@ sudo systemctl enable mariadb
 
 2. **Launch RDS Instance**:
    - **Engine**: MariaDB  
-   - **Instance Type**: `db.t2.micro`  
+   - **Instance Type**: `db.t2.micro` or `db.t4g.micro` 
    - **VPC**: `MultiTierVPC`  
    - **Subnet Group**: `DB-Subnet-Group`  
    - **Public Access**: No  
@@ -205,15 +208,29 @@ sudo systemctl enable mariadb
 - Password: `Re:Start!9`
 - Initial Database: `mydb`
 
+![chrome_hMUt4lCPil](https://github.com/user-attachments/assets/2210c67c-d3fe-4d3d-8f58-3e6c58a2c0ad)
+
 ---
 
 ## **Step 5: Test Connectivity**
 1. **Upload SSH Key to Bastion Host** and SSH into it.
+
+![chrome_gWWbhbkjJk](https://github.com/user-attachments/assets/c5fb1275-1bad-4679-b89c-562cd38f2a92)
+
+```bash
+scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-ec2-public-ip:/home/ec2-user/
+```
+
+![chrome_EhSdfA076V](https://github.com/user-attachments/assets/26b6a99b-faf8-41a1-af4e-3b8b8fa6af4e)
+
+![chrome_mWeULAx4qP](https://github.com/user-attachments/assets/910bb466-fd7a-4a08-8b30-ebb5c7f8c652)
+
 2. **From Bastion Host**:
    - SSH into App Server using the `.pem` file:
    ```bash
    ssh -i labsuser.pem ec2-user@<app-server-private-ip>
    ```
+![chrome_nXW0eDA46u](https://github.com/user-attachments/assets/5631d0a6-04b4-456f-bd37-280146502bf3)
 
 3. **Verify Connectivity**:
    - **From App Server**: Test the database connection:
@@ -221,6 +238,7 @@ sudo systemctl enable mariadb
    mysql --user=root --password='Re:Start!9' --host=<RDS-endpoint>
    show databases;
    ```
+![chrome_2lds3nWztC](https://github.com/user-attachments/assets/3164c8f7-a95c-4622-a57e-5e5f9a4ef204)
 
 ---
 
