@@ -2,7 +2,9 @@
 # **AWS Multi-Tier Architecture with Custom VPC**
 
 ## **Overview**
-This project demonstrates how to build a custom VPC with multiple subnets, security groups, and EC2 instances to simulate a multi-tier architecture. It uses a Bastion host, web server, application server, and database instance with proper security group configurations.
+In this project, I’ll walk you through creating a custom Virtual Private Cloud (VPC) in AWS to simulate a multi-tier architecture. This setup is a great way to understand how a layered environment works, much like real-world applications in production environments. We’ll use a Bastion host, web server, application server, and database server while ensuring each has the appropriate security group configurations for secure communication.
+
+This is a practical project for those wanting to explore cloud architecture and how AWS services interconnect while maintaining network isolation and security.
 
 ![chrome_eoAELUeYMe](https://github.com/user-attachments/assets/3076e948-9f7e-470d-9f67-e39e818e7b28)
 
@@ -19,8 +21,14 @@ This project demonstrates how to build a custom VPC with multiple subnets, secur
 
 ---
 
-## Prerequisites
+## **Prerequisites**
+Before we dive in, make sure you have:
 - An [AWS account](https://aws.amazon.com/free/) (Free Tier eligible)
+- Basic knowledge of EC2, VPCs, and RDS, although I’ll explain things as we go. 
+
+AWS Free Tier will allow you to explore without upfront cost, but always keep an eye on your resources to avoid unnecessary charges.
+
+---
 
 ## **Step 1: VPC and Subnet Setup**
 1. **Create a Custom VPC:**
