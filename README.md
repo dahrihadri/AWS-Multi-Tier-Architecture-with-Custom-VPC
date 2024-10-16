@@ -215,8 +215,6 @@ sudo systemctl enable mariadb
 ## **Step 5: Test Connectivity**
 1. **Upload SSH Key to Bastion Host** and SSH into it.
 
-![chrome_gWWbhbkjJk](https://github.com/user-attachments/assets/c5fb1275-1bad-4679-b89c-562cd38f2a92)
-
 ```bash
 scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-ec2-public-ip:/home/ec2-user/
 ```
