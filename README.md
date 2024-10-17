@@ -18,6 +18,7 @@ This is a practical project for those wanting to explore cloud architecture and 
 - [Step 4: Configure RDS Database](#step-4-configure-rds-database)
 - [Step 5: Test Connectivity](#step-5-test-connectivity)
 - [Step 6: Clean Up Resources](#step-6-clean-up-resources)
+- [Guide to Run this project via Terraform Script](#guide-to-run-this-project-via-terraform-script)
 
 ---
 
@@ -52,8 +53,8 @@ Subnets allow us to organize and isolate parts of our VPC into logical zones (av
 
 - **Private Subnets**: Used for application servers and databases, where they won't be accessible directly from the internet for security reasons.
   - **PrivateSubnet1**: For the application server (`192.168.2.0/24`)
-  - **PrivateSubnet2**: Another application subnet (`192.168.3.0/24`)
-  - **PrivateSubnet3**: Reserved for the database (`192.168.4.0/24`)
+  - **PrivateSubnet2**: For the Database subnet (`192.168.3.0/24`)
+  - **PrivateSubnet3**: Reserved for another database (`192.168.4.0/24`)
 
 Each subnet will be isolated to ensure we can apply specific security rules later.
 
@@ -104,6 +105,7 @@ This setup ensures that while the private subnets can access the internet, they 
    ![chrome_ufT9Iiyh5C](https://github.com/user-attachments/assets/e617db27-917d-40ba-b74f-d07fb93fb973)
 
 ---
+
 ## **Step 2: Create Security Groups**
 Security groups act as virtual firewalls, controlling traffic at the instance level. Here’s how we’ll configure them:
 
@@ -266,3 +268,71 @@ scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-e
 ## **Step 6: Clean Up Resources**
 Always clean up after yourself to avoid AWS charges. Terminate EC2 instances, delete RDS, and remove any associated AWS resources (like the VPC, subnets, etc.).
 
+---
+
+## **Summary**
+In this project, we built an AWS multi-tier architecture using a custom Virtual Private Cloud (VPC) to demonstrate secure and scalable infrastructure for deploying applications. The architecture includes:
+
+- A Bastion Host in a public subnet to securely access internal resources.
+- Web and Application Servers distributed across multiple private subnets for separation of concerns.
+- A MariaDB RDS Database hosted in a private subnet for secure data storage.
+- Security Groups to control network traffic and ensure that only authorized connections are allowed.
+- Internet Gateway and NAT Gateway for providing public internet access to the Bastion host while keeping the application and database servers private.
+
+This setup simulates a real-world environment with proper security configurations and best practices for high availability and performance. The project provides a clear walkthrough of deploying, securing, and connecting the different components, making it a helpful guide for learning AWS networking and cloud infrastructure.
+
+---
+
+## Guide to Run this project via Terraform Script
+
+### 1. Install Terraform: Ensure Terraform is installed on your local machine. You can download it from the official Terraform website.
+
+### 2. Configure AWS Credentials: Make sure your AWS credentials are configured in ~/.aws/credentials or by setting the following environment variables:
+
+```bash
+Copy code
+export AWS_ACCESS_KEY_ID="your_access_key"
+export AWS_SECRET_ACCESS_KEY="your_secret_key"
+```
+
+### 3. Initialize Terraform: Once you have your main.tf file set up with the script above, navigate to the project directory and run:
+
+```bash
+Copy code
+terraform init
+```
+
+This will download the necessary provider plugins.
+
+### 4. Plan the Infrastructure: To preview what Terraform will create without actually making changes, run:
+
+```bash
+Copy code
+terraform plan
+```
+
+### 5. Apply the Terraform Configuration: To create the resources defined in the script, run:
+
+```bash
+Copy code
+terraform apply
+```
+
+Confirm the apply when prompted by typing yes. Terraform will now provision the infrastructure on AWS.
+
+### 6. Access and Verify:
+
+Use your key pair (your-key-pair.pem) to access the EC2 Bastion Host.
+From the Bastion, you can SSH into your other private instances (Web and App Servers).
+Verify the RDS instance is up by checking the AWS Management Console.
+
+### 7. Destroy Resources: When you are done with the project, you can tear down the infrastructure with:
+
+```bash
+Copy code
+terraform destroy
+```
+
+This will remove all AWS resources created by Terraform.
+
+By following these steps, you'll be able to deploy the same AWS multi-tier architecture using Terraform. 
