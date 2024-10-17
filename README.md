@@ -18,6 +18,7 @@ This is a practical project for those wanting to explore cloud architecture and 
 - [Step 4: Configure RDS Database](#step-4-configure-rds-database)
 - [Step 5: Test Connectivity](#step-5-test-connectivity)
 - [Step 6: Clean Up Resources](#step-6-clean-up-resources)
+- [Summary](#summary)
 - [Guide to Run this project via Terraform Script](#guide-to-run-this-project-via-terraform-script)
 
 ---
