@@ -286,9 +286,11 @@ This setup simulates a real-world environment with proper security configuration
 
 ## Guide to Run this project via Terraform Script
 
-### 1. Install Terraform: Ensure Terraform is installed on your local machine. You can download it from the official Terraform website.
+### 1. Install Terraform: 
+Ensure Terraform is installed on your local machine. You can download it from the official Terraform website.
 
-### 2. Configure AWS Credentials: Make sure your AWS credentials are configured in ~/.aws/credentials or by setting the following environment variables:
+### 2. Configure AWS Credentials: 
+Make sure your AWS credentials are configured in ~/.aws/credentials or by setting the following environment variables:
 
 ```bash
 Copy code
@@ -296,7 +298,8 @@ export AWS_ACCESS_KEY_ID="your_access_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_key"
 ```
 
-### 3. Initialize Terraform: Once you have your main.tf file set up with the script above, navigate to the project directory and run:
+### 3. Initialize Terraform: 
+Once you have your main.tf file set up with the script above, navigate to the project directory and run:
 
 ```bash
 Copy code
@@ -305,14 +308,16 @@ terraform init
 
 This will download the necessary provider plugins.
 
-### 4. Plan the Infrastructure: To preview what Terraform will create without actually making changes, run:
+### 4. Plan the Infrastructure: 
+To preview what Terraform will create without actually making changes, run:
 
 ```bash
 Copy code
 terraform plan
 ```
 
-### 5. Apply the Terraform Configuration: To create the resources defined in the script, run:
+### 5. Apply the Terraform Configuration: 
+To create the resources defined in the script, run:
 
 ```bash
 Copy code
@@ -327,7 +332,8 @@ Use your key pair (your-key-pair.pem) to access the EC2 Bastion Host.
 From the Bastion, you can SSH into your other private instances (Web and App Servers).
 Verify the RDS instance is up by checking the AWS Management Console.
 
-### 7. Destroy Resources: When you are done with the project, you can tear down the infrastructure with:
+### 7. Destroy Resources: 
+When you are done with the project, you can tear down the infrastructure with:
 
 ```bash
 Copy code
