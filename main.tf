@@ -1,4 +1,4 @@
-# Provider configuration - setting the AWS region
+# Provider configuration - Setting the AWS region
 provider "aws" {
   region = "us-west-2"
 }
