@@ -31,66 +31,71 @@ AWS Free Tier will allow you to explore without upfront cost, but always keep an
 ---
 
 ## **Step 1: VPC and Subnet Setup**
-1. **Create a Custom VPC:**
-   - **Name**: `MultiTierVPC`
-   - **IPv4 CIDR Block**: `192.168.0.0/16 `
-   - **Tenancy**: Default
+### **1.1 Create a Custom VPC**
+We start by creating a VPC to simulate our isolated environment. Think of the VPC as a dedicated network within AWS where we have control over IP addressing, subnets, routing, and gateways.
 
-2. **Create Subnets:**
-   - **Public Subnet** for the Bastion host and web server:
-     - **Name**: `PublicSubnet`
-     - **CIDR Block**: `192.168.1.0/24`
-     - **Availability Zone**: `us-west-2a`
+- **VPC Name**: `MultiTierVPC`
+- **IPv4 CIDR Block**: `192.168.0.0/16`
+- **Tenancy**: Default (unless you’re working with Dedicated Instances, stick to default)
+
+By using `192.168.0.0/16`, we get a large address space that’s flexible enough to divide into several subnets later.
+
+---
+
+### **1.2 Create Subnets**
+Subnets allow us to organize and isolate parts of our VPC into logical zones (availability zones in AWS). The key here is to divide the network into public and private subnets:
+
+- **Public Subnet**: This is where our Bastion host and web server will live.
+  - **Name**: `PublicSubnet`
+  - **CIDR Block**: `192.168.1.0/24`
+  - **Availability Zone**: `us-west-2a`
+
+- **Private Subnets**: Used for application servers and databases, where they won't be accessible directly from the internet for security reasons.
+  - **PrivateSubnet1**: For the application server (`192.168.2.0/24`)
+  - **PrivateSubnet2**: Another application subnet (`192.168.3.0/24`)
+  - **PrivateSubnet3**: Reserved for the database (`192.168.4.0/24`)
+
+Each subnet will be isolated to ensure we can apply specific security rules later.
+
+---
    
-   - **Private Subnets** for the application server:
-     - **Name**: `PrivateSubnet1`
-     - **CIDR Block**: `192.168.2.0/24`
-     - **Availability Zone**: `us-west-2a`
-   
-     - **Name**: `PrivateSubnet2`
-     - **CIDR Block**: `192.168.3.0/24`
-     - **Availability Zone**: `us-west-2a`
-   
-   - **Private Subnet** for the database:
-     - **Name**: `PrivateSubnet3`
-     - **CIDR Block**: `192.168.4.0/24`
-     - **Availability Zone**: `us-west-2b`
-   
-3. **Create an Internet Gateway (IGW):**
-   - **Name**: `MultiTierIGW`
-   - Attach it to the `MultiTierVPC`.
+### **1.3 Internet Gateway (IGW)**
+An **Internet Gateway** connects our VPC to the outside world, allowing our public instances to communicate with the internet.
+
+- **Name**: `MultiTierIGW`
+- Attach it to `MultiTierVPC`.
 
    ![chrome_tMXZYSTppm](https://github.com/user-attachments/assets/597800d8-5c96-4e50-8ffe-03d078a8a948)
 
 
 
-4. **Create a NAT Gateway:**
-   - Allocate an **Elastic IP Address**.
-   - Create a NAT Gateway in the **PublicSubnet**.
-   - **Name**: `MultiTierNATGateway`
+---
+
+### **1.4 NAT Gateway**
+The **NAT Gateway** is essential for allowing instances in private subnets to initiate outbound connections to the internet (for updates, package installs, etc.) without exposing them to inbound traffic.
+
+- Allocate an **Elastic IP** and set up the NAT Gateway in the **PublicSubnet**.
+- **Name**: `MultiTierNATGateway`.
 
    ![chrome_nWROEGvgUx](https://github.com/user-attachments/assets/aaf8899f-df1c-4d4d-be94-92e73c530f6b)
 
+---
 
-5. **Configure Route Tables:**
-   - **Public Route Table**:
-     - **Name**: `PublicRouteTable`
-     - Associate with `PublicSubnet`.
-     - Add route:
-       - **Destination**: `0.0.0.0/0`
-       - **Target**: `MultiTierIGW`
+### **1.5 Route Tables**
+Route tables control the flow of traffic in and out of subnets. Here, we’ll configure two types of route tables:
+
+- **Public Route Table**: Directs traffic to the internet via the IGW.
+  - **Destination**: `0.0.0.0/0` (this routes all traffic to the internet)
+  - **Target**: `MultiTierIGW`
 
    ![chrome_uB8TCdcVHV](https://github.com/user-attachments/assets/441a14f1-cd0a-47a0-8033-234d86fca992)
 
    ![chrome_CoXy2HVVtC](https://github.com/user-attachments/assets/b7af003e-ca00-433c-b90b-3e3b0a293dc9)
 
+- **Private Route Table**: Routes private subnet traffic through the NAT Gateway to access the internet for outbound requests (e.g., app updates).
+  - **Target**: `MultiTierNATGateway`
 
-   - **Private Route Table**:
-     - **Name**: `PrivateRouteTable`
-     - Associate with private subnets (`PrivateSubnetApp1`, `PrivateSubnetApp2`, `PrivateSubnetDB`).
-     - Add route:
-       - **Destination**: `0.0.0.0/0`
-       - **Target**: `MultiTierNATGateway`
+This setup ensures that while the private subnets can access the internet, they won’t be accessible from outside, enhancing security.
 
    ![chrome_fnbeMGjJsY](https://github.com/user-attachments/assets/934b6975-9054-4d88-85fa-cfbb1edb425b)
 
@@ -99,44 +104,52 @@ AWS Free Tier will allow you to explore without upfront cost, but always keep an
    ![chrome_ufT9Iiyh5C](https://github.com/user-attachments/assets/e617db27-917d-40ba-b74f-d07fb93fb973)
 
 ---
-
 ## **Step 2: Create Security Groups**
-1. **Bastion Host Security Group**:
-   - **Name**: `SG-Bastion`
-   - **Rules**:
-     - **Inbound**:
-       - Type: SSH, Protocol: TCP, Port: 22, Source: `Your-Trusted-IP/32`. Give it three inbound rules, one for SSH using your IP and one for HTTP using 0.0.0.0/0 as well as https using 0.0.0.0/0
-     - **Outbound**: Allow all traffic.
+Security groups act as virtual firewalls, controlling traffic at the instance level. Here’s how we’ll configure them:
+
+### **2.1 Bastion Host Security Group**
+The Bastion host serves as an entry point for administrators. Only trusted IP addresses should be allowed to SSH into it.
+
+- **Inbound Rules**:
+  - SSH from your IP (`Your-Trusted-IP/32`)
+- **Outbound Rules**: Allow all traffic.
+
+This limits who can access your infrastructure and ensures the Bastion host remains secure.
 
    ![chrome_JfFLU8ywxq](https://github.com/user-attachments/assets/77dc2811-939d-4953-a798-2f68baef6522)
 
+---
 
-2. **Web Server Security Group**:
-   - **Name**: `SG-WebServer`
-   - **Rules**:
-     - **Inbound**:
-       - Type: HTTP, Protocol: TCP, Port: 80, Source: `0.0.0.0/0`. Give it the same inbound rules as the Bastion Host security group
-     - **Outbound**: Allow all traffic.
+### **2.2 Web Server Security Group**
+The web server is accessible via HTTP and HTTPS. However, we will still keep security tight.
+
+- **Inbound Rules**:
+  - HTTP (Port 80) from anywhere (`0.0.0.0/0`)
+  - HTTPS (Port 443) from anywhere
+- **Outbound Rules**: Allow all traffic.
 
    ![chrome_U0V6PXqW4m](https://github.com/user-attachments/assets/90eb79a6-d126-42ce-979d-3fbefb7b114d)
 
+---
 
-3. **Application Server Security Group**:
-   - **Name**: `SG-AppServer`
-   - **Rules**:
-     - **Inbound**:
-       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-WebServer`. Give it an inbound rule for All ICMP -IPv4 with a source of your web server SG and another inbound rule for SSH with a source of your bastion host SG
-     - **Outbound**: Allow all traffic.
+### **2.3 Application Server Security Group**
+For the application server, we want it to communicate only with the web server and the database.
+
+- **Inbound Rules**:
+  - MySQL (Port 3306) from the Web Server Security Group
+  - SSH access from the Bastion host.
     
    ![chrome_QjgOq7rgYW](https://github.com/user-attachments/assets/fee42064-8a93-4cec-8d02-fbf340fbf3ca)
 
+---
 
-4. **Database Security Group**:
-   - **Name**: `SG-Database`
-   - **Rules**:
-     - **Inbound**:
-       - Type: MySQL/Aurora, Protocol: TCP, Port: 3306, Source: `SG-AppServer`. Give it two inbound rules both for MYSQL/Aurora and give one of them a source of your app server SG and the other one a source of your bastion host SG
-     - **Outbound**: Allow all traffic.
+### **2.4 Database Security Group**
+The database will accept traffic only from the application server.
+
+- **Inbound Rules**:
+  - MySQL (Port 3306) from the App Server Security Group.
+
+This way, the database is isolated and only accessible by authorized components.
     
    ![chrome_ojIvDlsM96](https://github.com/user-attachments/assets/0ab6372b-1b5f-4b8a-a6f3-44c3ed0f5841)
 
@@ -145,43 +158,38 @@ AWS Free Tier will allow you to explore without upfront cost, but always keep an
 ---
 
 ## **Step 3: Deploy EC2 Instances**
-### **Create Bastion Host**
-1. **AMI**: Amazon Linux 2  
-2. **Instance Type**: `t2.micro`  
-3. **Subnet**: `PublicSubnet`  
-4. **Security Group**: `SG-Bastion`  
-5. **Key Pair**: Select or create a key pair
-6. **Auto-assign public IP**: enable 
+We’ll now deploy the Bastion host, web server, and application server.
 
-**User Data (Optional)**:
+### **Bastion Host**:
+- **AMI**: Amazon Linux 2  
+- **Instance Type**: `t2.micro`  
+- **Security Group**: `SG-Bastion`  
+- **Auto-assign Public IP**: Yes  
+
+**User Data** (to update and prepare the instance):
 ```bash
 #!/bin/bash
 sudo yum update -y
 ```
 
-### **Create Web Server**
-1. **AMI**: Amazon Linux 2  
-2. **Instance Type**: `t2.micro`  
-3. **Subnet**: `PublicSubnet`  
-4. **Security Group**: `SG-WebServer`
-5. **Auto-assign public IP**: enable   
+### **Web Server**:
+Similar to the Bastion host, but it runs an HTTP server.
 
 **User Data**:
 ```bash
 #!/bin/bash
 sudo yum update -y
-sudo amazon-linux-extras install -y lamp-mariadb10.2-php7.2 php7.2
 sudo yum install -y httpd
 sudo systemctl start httpd
 sudo systemctl enable httpd
 ```
 
-### **Create App Server**
-1. **AMI**: Amazon Linux 2  
-2. **Instance Type**: `t2.micro`  
-3. **Subnet**: `PrivateSubnetApp1`  
-4. **Security Group**: `SG-AppServer`
-5. **Auto-assign public IP**: disable  
+The web server will be reachable from the internet.
+
+---
+
+### **Application Server**:
+This sits in the private subnet, running behind the web server.
 
 **User Data**:
 ```bash
@@ -191,19 +199,22 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 ```
 
-![chrome_Wqb1YFdmDs](https://github.com/user-attachments/assets/82d374a8-45b9-4bed-a0d6-65d5935b62ce)
+This application server will connect to the database and handle backend processes.
 
+![chrome_Wqb1YFdmDs](https://github.com/user-attachments/assets/82d374a8-45b9-4bed-a0d6-65d5935b62ce)
 
 ---
 
 ## **Step 4: Configure RDS Database**
-1. **Create a DB Subnet Group**:
+The final component is setting up an RDS instance in the private subnet.
+
+### **4.1 Create a DB Subnet Group:**
    - **Name**: `DB-Subnet-Group`
    - **Subnets**: `PrivateSubnetDB`
 
 ![chrome_MfLu2pnuaR](https://github.com/user-attachments/assets/6f2b4cb9-4231-4fed-aa42-0d3ce7df0c5e)
 
-2. **Launch RDS Instance**:
+### **4.2 Launch RDS Instance:**
    - **Engine**: MariaDB  
    - **Instance Type**: `db.t2.micro` or `db.t4g.micro` 
    - **VPC**: `MultiTierVPC`  
@@ -216,12 +227,16 @@ sudo systemctl enable mariadb
 - Password: `Re:Start!9`
 - Initial Database: `mydb`
 
+This instance won’t be directly accessible from the internet, only via the app server.
+
 ![chrome_hMUt4lCPil](https://github.com/user-attachments/assets/2210c67c-d3fe-4d3d-8f58-3e6c58a2c0ad)
 
 ---
 
 ## **Step 5: Test Connectivity**
-1. **Upload SSH Key to Bastion Host** and SSH into it.
+Here, we verify connectivity by SSHing into the Bastion host, then into the app server, and finally checking the database connection.
+
+### **5.1 Upload SSH Key to Bastion Host** and SSH into it.
 
 ```bash
 scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-ec2-public-ip:/home/ec2-user/
@@ -231,14 +246,14 @@ scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-e
 
 ![chrome_mWeULAx4qP](https://github.com/user-attachments/assets/910bb466-fd7a-4a08-8b30-ebb5c7f8c652)
 
-2. **From Bastion Host**:
+### **5.2 From Bastion Host**:
    - SSH into App Server using the `.pem` file:
    ```bash
    ssh -i labsuser.pem ec2-user@<app-server-private-ip>
    ```
 ![chrome_nXW0eDA46u](https://github.com/user-attachments/assets/5631d0a6-04b4-456f-bd37-280146502bf3)
 
-3. **Verify Connectivity**:
+### **5.3 Verify Connectivity**:
    - **From App Server**: Test the database connection:
    ```bash
    mysql --user=root --password='Re:Start!9' --host=<RDS-endpoint>
@@ -249,6 +264,5 @@ scp -i "C:\path\to\your\key.pem" -P 22 "C:\path\to\your\key.pem" ec2-user@your-e
 ---
 
 ## **Step 6: Clean Up Resources**
-1. Terminate EC2 instances.
-2. Delete the RDS instance.
-3. Remove subnets, NAT Gateway, Internet Gateway, and VPC to avoid charges.
+Always clean up after yourself to avoid AWS charges. Terminate EC2 instances, delete RDS, and remove any associated AWS resources (like the VPC, subnets, etc.).
+
