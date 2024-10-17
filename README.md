@@ -293,7 +293,6 @@ Ensure Terraform is installed on your local machine. You can download it from th
 Make sure your AWS credentials are configured in ~/.aws/credentials or by setting the following environment variables:
 
 ```bash
-Copy code
 export AWS_ACCESS_KEY_ID="your_access_key"
 export AWS_SECRET_ACCESS_KEY="your_secret_key"
 ```
@@ -302,7 +301,6 @@ export AWS_SECRET_ACCESS_KEY="your_secret_key"
 Once you have your main.tf file set up with the script above, navigate to the project directory and run:
 
 ```bash
-Copy code
 terraform init
 ```
 
@@ -312,7 +310,6 @@ This will download the necessary provider plugins.
 To preview what Terraform will create without actually making changes, run:
 
 ```bash
-Copy code
 terraform plan
 ```
 
@@ -320,7 +317,6 @@ terraform plan
 To create the resources defined in the script, run:
 
 ```bash
-Copy code
 terraform apply
 ```
 
@@ -336,7 +332,6 @@ Verify the RDS instance is up by checking the AWS Management Console.
 When you are done with the project, you can tear down the infrastructure with:
 
 ```bash
-Copy code
 terraform destroy
 ```
 
